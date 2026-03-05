@@ -213,7 +213,7 @@ uv run ruff format
 * [tox](https://github.com/tox-dev/tox)
 * [uv](https://github.com/astral-sh/uv)
 * [remark](https://github.com/remarkjs/remark)
-* Love :blue\_heart:
+* Love 💙
 
 ## License
 
