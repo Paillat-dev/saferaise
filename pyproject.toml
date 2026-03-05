@@ -50,7 +50,7 @@ pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)'
 replacement = '[\1](https://github.com/Paillat-dev/saferaise/tree/main\g<2>)'
 
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
-pattern = '\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]'
+pattern = '\\?\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]'
 replacement = '**\1**:'
 
 [tool.hatchling]
