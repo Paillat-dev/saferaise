@@ -34,25 +34,34 @@ jobs:
         with:
           python-version-file: "pyproject.toml"
 
-      - name: Install dependencies
+      - name: "Install dependencies"
         run: uv sync
+        env:
+          UV_PYTHON_DOWNLOADS: "false"
+          UV_FROZEN: "true"
 
-      - name: Build
+      - name: "Build"
         run: uv build
 
-      - name: Publish
+      - name: "Publish"
         run: uv publish
 
-      - name: Create GitHub Release
+      - name: "Generate Changelog"
+        uses: orhun/git-cliff-action@v4
+        id: cliff
+        with:
+          config: cliff.toml
+          args: --latest --strip header
+
+      - name: "Create GitHub Release"
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
-          generate_release_notes: true
           prerelease: ${{ contains(github.ref_name, '-') }}
           body: |
+            ${{ steps.cliff.outputs.content }}
             ## Upgrade
-            
             ```bash
             pip install -U saferaise
             ```
-
+            
             ---
