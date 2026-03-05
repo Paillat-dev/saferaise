@@ -1,5 +1,18 @@
+[changelog]
+body = """
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group }}
+{% for commit in commits %}
+- {{ commit.message }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/Paillat-dev/saferaise/commit/{{ commit.id }}))
+{% endfor %}
+{% endfor %}
+"""
+
 [git]
 conventional_commits = false
+commit_preprocessors = [
+    { pattern = '\n.*', replace = "" },
+]
 commit_parsers = [
     { message = "^[Cc]hore", group = "Chores" },
     { message = "^[Ff]eat", group = "New Features" },
