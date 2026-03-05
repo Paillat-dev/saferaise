@@ -22,7 +22,7 @@ jobs:
         with:
           python-version-file: "pyproject.toml"
 
-      - name: Install dependencies
+      - name: "Install dependencies"
         run: uv sync --group dev
 
       - name: "Format Check"
@@ -39,6 +39,26 @@ jobs:
         id: typecheck
         continue-on-error: true
         run: "uv run basedpyright"
+
+  quality-pnpm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "Install pnpm"
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          cache: true
+
+      - name: "Install dependencies"
+        run: pnpm install
+
+      - name: "Format Check"
+        id: format
+        continue-on-error: true
+        run: "pnpm run format:check"
+
   tests:
     if: ${{ github.event_name != 'schedule' }}
     runs-on: ${{ matrix.os }}
@@ -69,9 +89,9 @@ jobs:
     needs: [tests]
     if: always() && github.event_name != 'schedule'
     steps:
-      - name: Tests succeeded
+      - name: "Tests succeeded"
         if: ${{ !(contains(needs.*.result, 'failure')) }}
         run: exit 0
-      - name: Tests failed
+      - name: "Tests failed"
         if: ${{ contains(needs.*.result, 'failure') }}
         run: exit 1
