@@ -38,7 +38,7 @@ jobs:
       - name: "Type Check"
         id: typecheck
         continue-on-error: true
-        run: "uv run basedpyright"
+        run: "uv run basedpyright src"
 
   quality-pnpm:
     runs-on: ubuntu-latest
