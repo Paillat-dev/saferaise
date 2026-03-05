@@ -10,6 +10,17 @@ dynamic = ["version", "urls", "readme"]
 authors = [
     { name = "Paillat-dev", email = "me@paillat.dev" }
 ]
+description = "Checked exceptions for Python. Declare what your functions raise, and let saferaise enforce it - using your existing try/except blocks."
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+    "Operating System :: OS Independent",
+]
+keywords = ["exceptions", "checked exceptions", "type checking", "error handling"]
 
 [dependency-groups]
 dev = [
