@@ -12,7 +12,7 @@ Python's exception system is powerful but unstructured: any function can raise a
 
 `saferaise` is designed to complement static analysis tools, not replace them. Use it alongside type checkers (basedpyright, mypy) for static guarantees, and alongside linter rules like [`RET506`](https://docs.astral.sh/ruff/rules/docstring-missing-exception/) for documentation coverage. `saferaise` adds the **runtime enforcement layer** - catching what static tools can't, such as a `@raises` function being called outside any handling context.
 
-> !\[CAUTION]
+> \[!CAUTION]
 > **Alpha:** The API may change between releases, and using this right now might very well break your code in weird ways, so don't use it in production.
 
 ## Contents
