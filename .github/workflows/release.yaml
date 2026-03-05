@@ -50,5 +50,6 @@ jobs:
             
             ```bash
             pip install -U saferaise
-            
+            ```
+
             ---
