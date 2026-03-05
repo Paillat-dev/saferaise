@@ -27,17 +27,14 @@ jobs:
 
       - name: "Format Check"
         id: format
-        continue-on-error: true
         run: "uv run ruff format --check --preview --output-format github"
 
       - name: "Lint Check"
         id: lint
-        continue-on-error: true
         run: "uv run ruff check --output-format github"
 
       - name: "Type Check"
         id: typecheck
-        continue-on-error: true
         run: "uv run basedpyright src"
 
   quality-pnpm:
@@ -55,7 +52,6 @@ jobs:
 
       - name: "Format Check"
         id: format
-        continue-on-error: true
         run: "pnpm run format:check"
 
   tests:
@@ -83,6 +79,7 @@ jobs:
 
       - name: "Run tests"
         run: tox
+
   tests-pass: # ref: https://github.com/orgs/community/discussions/4324#discussioncomment-3477871
     runs-on: ubuntu-latest
     needs: [tests]
