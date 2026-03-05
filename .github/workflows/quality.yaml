@@ -23,7 +23,10 @@ jobs:
           python-version-file: "pyproject.toml"
 
       - name: "Install dependencies"
-        run: uv sync --group dev
+        run: uv sync --group dev --group test
+        env:
+          UV_PYTHON_DOWNLOADS: "false"
+          UV_FROZEN: "true"
 
       - name: "Format Check"
         id: format
@@ -68,17 +71,16 @@ jobs:
       - name: "Setup Python"
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
-          python-version: "3.13"
-          cache: "pip"
-          cache-dependency-path: "pyproject.toml"
+          python-version-file: "pyproject.toml"
 
       - name: "Install dependencies"
-        run: |
-          python -m pip install --upgrade pip
-          pip install . --group dev
+        run: uv sync --group dev
+        env:
+          UV_PYTHON_DOWNLOADS: "false"
+          UV_FROZEN: "true"
 
       - name: "Run tests"
-        run: tox
+        run: uv run tox
 
   tests-pass: # ref: https://github.com/orgs/community/discussions/4324#discussioncomment-3477871
     runs-on: ubuntu-latest
