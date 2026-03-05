@@ -3,7 +3,7 @@
 [![Alpha](https://img.shields.io/badge/status-alpha-orange)](https://github.com/Paillat-dev/saferaise)
 [![PyPI](https://img.shields.io/pypi/v/saferaise)](https://pypi.org/project/saferaise/)
 [![py.typed](https://img.shields.io/badge/typing-py.typed-blue)](https://peps.python.org/pep-0561/)
-[![CI](https://github.com/Paillat-dev/saferaise/actions/workflows/ci.yml/badge.svg)](https://github.com/Paillat-dev/saferaise/actions)
+[![CI](https://github.com/Paillat-dev/saferaise/actions/workflows/CI.yaml/badge.svg)](https://github.com/Paillat-dev/saferaise/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 **Checked exceptions for Python.** Declare what your functions raise, and let `saferaise` enforce it - using your existing `try/except` blocks.
