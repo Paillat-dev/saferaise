@@ -6,12 +6,13 @@ from ._errors import UnwatchedRaiseError
 from ._watched_exceptions import get_exceptions, watch_exceptions
 
 
-def _validate_exceptions(func_name: str, exceptions: tuple[type[BaseException], ...]) -> None:
+def _validate_exceptions(func_name: str, exceptions: tuple[type[BaseException], ...]) -> UnwatchedRaiseError | None:
     current = get_exceptions()
     if current is not None:
         for exc in exceptions:
             if not any(issubclass(exc, e) for e in current):
-                raise UnwatchedRaiseError(func_name, exceptions, exc)
+                return UnwatchedRaiseError(func_name, exceptions, exc)
+    return None
 
 
 def raises[T: Callable[..., object]](*exceptions: type[BaseException]) -> Callable[[T], T]:
@@ -36,7 +37,8 @@ def raises[T: Callable[..., object]](*exceptions: type[BaseException]) -> Callab
 
             @wraps(func)
             async def async_wrapper(*args: object, **kwargs: object) -> object:
-                _validate_exceptions(func.__name__, exceptions)
+                if error := _validate_exceptions(func.__name__, exceptions):
+                    raise error.with_traceback(None)
                 with watch_exceptions(*exceptions):
                     return await func(*args, **kwargs)
 
@@ -44,7 +46,8 @@ def raises[T: Callable[..., object]](*exceptions: type[BaseException]) -> Callab
 
         @wraps(func)
         def wrapper(*args: object, **kwargs: object) -> object:
-            _validate_exceptions(func.__name__, exceptions)
+            if error := _validate_exceptions(func.__name__, exceptions):
+                raise error.with_traceback(None)
             with watch_exceptions(*exceptions):
                 return func(*args, **kwargs)
 

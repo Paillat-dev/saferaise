@@ -12,7 +12,8 @@ class UnwatchedRaiseError(SafeRaiseError):
         declared_names = ", ".join(e.__name__ for e in declared)
         super().__init__(
             f"Function {func_name} declares raises({declared_names})"
-            + f" but {missing.__name__} is not in the current watched exceptions"
+            + f" but {missing.__name__} is not in the current watched set."
+            + f" Wrap the call with `unsafe({missing.__name__})` or an appropriate try/except block."
         )
 
 
