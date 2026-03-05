@@ -44,18 +44,14 @@ class _TryCtxFinder(importlib.abc.MetaPathFinder):
         target: types.ModuleType | None = None,
     ) -> importlib.machinery.ModuleSpec | None:
         if not any(fullname == r or fullname.startswith(r + ".") for r in self._roots):
-            return None  # not our code, skip immediately
+            return None
 
-        for finder in sys.meta_path:
-            if finder is self:
-                continue
-            spec = finder.find_spec(fullname, path, target)
-            if spec is None or spec.origin is None:
-                continue
-            spec.loader = TryCtxLoader(str(spec.origin))
-            return spec
+        spec = importlib.machinery.PathFinder.find_spec(fullname, path, target)
+        if spec is None or spec.origin is None:
+            return None
 
-        return None
+        spec.loader = TryCtxLoader(str(spec.origin))
+        return spec
 
 
 def register(*roots: str) -> None:
