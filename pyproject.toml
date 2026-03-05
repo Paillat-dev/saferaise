@@ -78,6 +78,9 @@ reportAny = false
 reportUnusedCallResult = false
 reportMissingTypeStubs = false
 pythonVersion = "3.13"
+executionEnvironments = [
+    { root = "src/saferaise/_version.py", reportDeprecated = false },
+]
 
 [tool.ruff]
 target-version = "py313"
