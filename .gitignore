@@ -1,0 +1,12 @@
+.venv
+.tox
+.pytest_cache
+node_modules
+
+.idea
+.vscode
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

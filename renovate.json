@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>nicebots-xyz/renovate-config",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":dependencyDashboard"
+  ],
+  "baseBranchPatterns": ["master"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "git-submodules": {
+    "enabled": true
+  },
+  "commitMessagePrefix": "chore: ⬆️",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["pin"],
+      "commitMessagePrefix": "chore: 📌"
+    },
+    {
+      "matchUpdateTypes": ["rollback"],
+      "commitMessagePrefix": "chore: ⬇️"
+    },
+    {
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "commitMessageAction": "chore: 📌 Update lock file"
+    }
+  ],
+  "pinDigests": true
+}
