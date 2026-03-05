@@ -1,8 +1,6 @@
 """Tests for _patcher/_hook.py."""
 
-import importlib
 import sys
-from pathlib import Path
 
 import pytest
 
@@ -10,12 +8,7 @@ from saferaise import enable
 from saferaise._patcher._common import WATCHER_KEY
 from saferaise._patcher._hook import _TryCtxFinder, register  # pyright: ignore[reportPrivateUsage]
 
-
-@pytest.fixture
-def _cleanup_meta_path():  # pyright: ignore[reportUnusedFunction]
-    original = sys.meta_path.copy()
-    yield
-    sys.meta_path[:] = original
+from .conftest import PackageFactory
 
 
 @pytest.mark.usefixtures("_cleanup_meta_path")
@@ -54,38 +47,39 @@ class TestTryCtxFinder:
         assert result is None
 
 
-@pytest.fixture
-def sample_package(tmp_path: Path):
-    """Create a temporary package that register() can intercept."""
-    pkg = tmp_path / "samplepkg"
-    pkg.mkdir()
-    (pkg / "__init__.py").write_text("")
-    (pkg / "mod.py").write_text(
-        "from saferaise._watched_exceptions import get_exceptions\n"
-        + "result = None\n"
-        + "try:\n"
-        + "    result = get_exceptions()\n"
-        + "except ValueError:\n"
-        + "    pass\n"
-    )
-    sys.path.insert(0, str(tmp_path))
-    yield "samplepkg.mod"
-    sys.path.remove(str(tmp_path))
-    sys.modules.pop("samplepkg.mod", None)
-    sys.modules.pop("samplepkg", None)
-
-
 @pytest.mark.usefixtures("_cleanup_meta_path")
 class TestRegisterEndToEnd:
-    def test_imported_module_has_watcher_key(self, sample_package: str):
+    def test_imported_module_has_watcher_key(self, make_package: PackageFactory) -> None:
+        pkg = make_package("samplepkg")
+        pkg.add_module(
+            "mod.py",
+            "from saferaise._watched_exceptions import get_exceptions\n"
+            + "result = None\n"
+            + "try:\n"
+            + "    result = get_exceptions()\n"
+            + "except ValueError:\n"
+            + "    pass\n",
+        )
+        pkg.install()
         register("samplepkg")
         with enable():
-            mod = importlib.import_module(sample_package)
+            mod = pkg.import_module("mod")
         assert WATCHER_KEY in mod.__dict__
 
-    def test_try_body_sees_watched_exceptions(self, sample_package: str):
+    def test_try_body_sees_watched_exceptions(self, make_package: PackageFactory) -> None:
+        pkg = make_package("samplepkg")
+        pkg.add_module(
+            "mod.py",
+            "from saferaise._watched_exceptions import get_exceptions\n"
+            + "result = None\n"
+            + "try:\n"
+            + "    result = get_exceptions()\n"
+            + "except ValueError:\n"
+            + "    pass\n",
+        )
+        pkg.install()
         register("samplepkg")
         with enable():
-            mod = importlib.import_module(sample_package)
+            mod = pkg.import_module("mod")
         assert mod.result is not None
         assert ValueError in mod.result
