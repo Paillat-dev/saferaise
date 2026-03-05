@@ -15,7 +15,9 @@ jobs:
     permissions:
       id-token: write
       contents: write
-    environment: pypi
+    environment:
+      name: pypi
+      url: https://pypi.org/project/saferaise/
 
     steps:
       - uses: actions/checkout@v4
