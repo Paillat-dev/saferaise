@@ -47,7 +47,7 @@ jobs:
         run: uv publish
 
       - name: "Generate Changelog"
-        uses: orhun/git-cliff-action@v4
+        uses: orhun/git-cliff-action@c93ef52f3d0ddcdcc9bd5447d98d458a11cd4f72 # v4
         id: cliff
         with:
           config: cliff.toml
