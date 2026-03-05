@@ -40,6 +40,8 @@ pip install saferaise
 
 > Requires Python 3.13+
 
+<!-- quick start -->
+
 ## Quick Start
 
 `register` must be called **before** a package is imported - and in a separate file from the code being instrumented. This is a hard requirement: the import hook only rewrites modules at load time, so any module imported before `register` is called will not be instrumented.
