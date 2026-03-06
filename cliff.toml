@@ -23,4 +23,5 @@ commit_parsers = [
     { message = "^:lock:", group = "Security" },
     { message = "^:memo:|^:pencil2:|^:bulb:|^:speech_balloon:", group = "Documentation" },
     { message = "^:recycle:|^[Rr]efactor|^:wrench:|^:arrow_up:|^:arrow_down:|^:heavy_plus_sign:|^:heavy_minus_sign:|^:construction_worker:|^:white_check_mark:|^:test_tube:|^[Cc]hore", group = "Chores" },
+    { body = ".*", group = "Other" },
 ]
