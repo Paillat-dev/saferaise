@@ -45,10 +45,19 @@ def enable() -> Iterator[None]:
     """Enable exception watching with an empty watched set.
 
     Inside this context, any ``@raises``-decorated function will validate that
-    its declared exceptions are being watched.
+    its declared exceptions are being watched. Use this at the top level of
+    your application or in tests to activate enforcement.
 
-    Yields:
-        None
+    Example:
+        ```python
+        import saferaise
+
+        saferaise.register("myapp")
+        import myapp
+
+        with saferaise.enable():
+            myapp.run()
+        ```
     """
     token = _watched_exceptions.set(frozenset())
     try:
@@ -63,9 +72,18 @@ def disable() -> Iterator[None]:
 
     Inside this context, ``@raises`` validation is skipped entirely,
     regardless of any outer ``enable`` or ``watch_exceptions`` context.
+    Use this in production hot paths or during migration when you want
+    instrumentation in place but enforcement off.
 
-    Yields:
-        None
+    Example:
+        ```python
+        import os
+        from saferaise import enable, disable
+
+        ctx = enable if os.getenv("ENV") != "production" else disable
+        with ctx():
+            myapp.run()
+        ```
     """
     token = _watched_exceptions.set(None)
     try:
@@ -78,14 +96,27 @@ def disable() -> Iterator[None]:
 def unsafe(*exceptions: type[BaseException]) -> Iterator[None]:
     """Add exceptions to the watched set without validating callers.
 
-    Useful for code that needs to handle exceptions not declared by its
-    own ``@raises`` decorator, such as top-level error boundaries.
+    Useful at bootstrapping boundaries where a ``try/except`` would be
+    artificial - for example, entry points or test harnesses that need
+    to manually declare which exceptions are acceptable.
 
     Args:
         *exceptions: Exception types to add to the watched set.
 
-    Yields:
-        None
+    Example:
+        ```python
+        from saferaise import enable, unsafe, raises
+
+
+        @raises(ValueError)
+        def parse(raw: str) -> int:
+            return int(raw)
+
+
+        with enable():
+            with unsafe(ValueError):
+                parse("abc")  # OK - ValueError manually added to watched set
+        ```
     """
     token = _add_exceptions(*exceptions)
     try:

@@ -21,18 +21,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          fetch-depth: 0
-
-      - name: "Install uv"
-        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7
-        with:
-          enable-cache: true
 
       - name: "Set up Python"
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version-file: "pyproject.toml"
+
+      - name: "Install uv"
+        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7
+        with:
+          enable-cache: true
 
       - name: "Install dependencies"
         run: uv sync
@@ -65,3 +63,39 @@ jobs:
             ```
             
             ---
+
+  deploy-docs:
+    needs: [quality, publish]
+    name: Deploy docs
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: "Set up Python"
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+        with:
+          python-version-file: "pyproject.toml"
+
+      - name: "Install uv"
+        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7
+        with:
+          enable-cache: true
+
+      - name: "Install dependencies"
+        run: uv sync --group docs
+        env:
+          UV_PYTHON_DOWNLOADS: "false"
+          UV_FROZEN: "true"
+
+      - run: uv run zensical build --clean
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+      - uses: actions/deploy-pages@v4
+        id: deployment

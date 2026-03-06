@@ -55,4 +55,30 @@ class _TryCtxFinder(importlib.abc.MetaPathFinder):
 
 
 def register(*roots: str) -> None:
+    """Install the import hook for the given package roots.
+
+    Must be called **before** importing the packages you want to instrument,
+    and in a separate file from those packages. The hook rewrites every
+    ``try/except`` block at import time so that caught exception types are
+    automatically added to the watched set.
+
+    Args:
+        *roots: Top-level package names to instrument (e.g. ``"myapp"``).
+
+    Example:
+        ```python
+        import saferaise
+
+        saferaise.register("myapp")  # must come before `import myapp`
+
+        import myapp
+
+        with saferaise.enable():
+            myapp.run()
+        ```
+
+    Raises:
+        NameCollisionError: If an instrumented module already has an attribute
+            named ``_saferaise_watch_exceptions``.
+    """
     sys.meta_path.insert(0, _TryCtxFinder(*roots))
