@@ -10,6 +10,7 @@ jobs:
       contents: read
 
   publish:
+    name: Publish
     runs-on: ubuntu-latest
     needs: quality
     permissions:
@@ -67,6 +68,8 @@ jobs:
   deploy-docs:
     needs: [quality, publish]
     name: Deploy docs
+    permissions:
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -91,11 +94,14 @@ jobs:
           UV_PYTHON_DOWNLOADS: "false"
           UV_FROZEN: "true"
 
-      - run: uv run zensical build --clean
+      - name: "Build docs"
+        run: uv run zensical build --clean
 
-      - uses: actions/upload-pages-artifact@v4
+      - name: "Upload docs"
+        uses: actions/upload-pages-artifact@v4
         with:
           path: site
 
-      - uses: actions/deploy-pages@v4
+      - name: "Upload docs to GitHub Pages"
+        uses: actions/deploy-pages@v4
         id: deployment
