@@ -21,6 +21,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 keywords = ["exceptions", "checked exceptions", "type checking", "error handling"]
+license = "MIT"
+license-files = ["LICENSE"]
 
 [dependency-groups]
 dev = [
@@ -46,7 +48,8 @@ version-file = "src/saferaise/_version.py"
 
 [tool.hatch.metadata.hooks.vcs.urls]
 Homepage = "https://github.com/Paillat-dev/saferaise"
-source_archive = "https://github.com/Paillat-dev/saferaise/archive/{commit_hash}.zip"
+Documentation = "https://paillat.dev/saferaise/"
+"Source code" = "https://github.com/Paillat-dev/saferaise/archive/{commit_hash}.zip"
 
 [tool.hatch.metadata.hooks.fancy-pypi-readme]
 content-type = "text/markdown"
