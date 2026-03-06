@@ -69,6 +69,8 @@ jobs:
     needs: [quality, publish]
     name: Deploy docs
     permissions:
+      contents: read
+      pages: write
       id-token: write
     environment:
       name: github-pages
