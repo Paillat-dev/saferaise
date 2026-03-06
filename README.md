@@ -8,7 +8,7 @@
 
 **Checked exceptions for Python.** Declare what your functions raise, and let `saferaise` enforce it - using your existing `try/except` blocks.
 
-> [!CAUTION]
+> \[!CAUTION]
 > **Alpha:** The API may change between releases, and using this right now might very well break your code in weird ways, so don't use it in production.
 
 ## Installation
@@ -18,6 +18,8 @@ pip install saferaise
 ```
 
 > Requires Python 3.13+
+
+<!-- quick start -->
 
 ## Quick Start
 
@@ -51,11 +53,11 @@ def main():
 
 ## Documentation
 
-Full documentation is available at **https://paillat-dev.github.io/saferaise**
+Full documentation is available at **[https://paillat-dev.github.io/saferaise](https://paillat-dev.github.io/saferaise)**
 
-- [How It Works](https://paillat-dev.github.io/saferaise/how-it-works/)
-- [Advanced Usage](https://paillat-dev.github.io/saferaise/advanced/)
-- [API Reference](https://paillat-dev.github.io/saferaise/api/)
+* [How It Works](https://paillat-dev.github.io/saferaise/how-it-works/)
+* [Advanced Usage](https://paillat-dev.github.io/saferaise/advanced/)
+* [API Reference](https://paillat-dev.github.io/saferaise/api/)
 
 ## License
 
