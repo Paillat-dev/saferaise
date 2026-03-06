@@ -17,10 +17,10 @@ commit_preprocessors = [
 commit_parsers = [
     { message = "^:sparkles:|^[Ff]eat|^:rocket:|^:tada:", group = "Added" },
     { message = "^:bug:|^:adhesive_bandage:|^[Ff]ix|^:rotating_light:|^:green_heart:", group = "Fixed" },
-    { message = "^:zap:|^:lipstick:|^:label:|^:page_facing_up:|^:see_no_evil:", group = "Changed" },
+    { message = "^:zap:|^:lipstick:|^:label:|^:page_facing_up:|^:see_no_evil:|^:building_construction:", group = "Changed" },
     { message = "^:fire:|^:coffin:", group = "Removed" },
     { message = "^:wastebasket:", group = "Deprecated" },
     { message = "^:lock:", group = "Security" },
     { message = "^:memo:|^:pencil2:|^:bulb:|^:speech_balloon:", group = "Documentation" },
-    { message = "^:recycle:|^[Rr]efactor|^:wrench:|^:arrow_up:|^:arrow_down:|^:heavy_plus_sign:|^:heavy_minus_sign:|^:building_construction:|^:white_check_mark:|^:test_tube:|^[Cc]hore", group = "Chores" },
+    { message = "^:recycle:|^[Rr]efactor|^:wrench:|^:arrow_up:|^:arrow_down:|^:heavy_plus_sign:|^:heavy_minus_sign:|^:construction_worker:|^:white_check_mark:|^:test_tube:|^[Cc]hore", group = "Chores" },
 ]
