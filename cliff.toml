@@ -1,5 +1,6 @@
 [changelog]
 body = """
+## [{{ version }}] - {{ timestamp | date(format="%Y-%m-%d") }}
 {% for group, commits in commits | group_by(attribute="group") %}
 ### {{ group }}
 {% for commit in commits %}
@@ -14,25 +15,12 @@ commit_preprocessors = [
     { pattern = '\n.*', replace = "" },
 ]
 commit_parsers = [
-    { message = "^[Cc]hore", group = "Chores" },
-    { message = "^[Ff]eat", group = "New Features" },
-    { message = "^[Ff]ix", group = "Bug Fixes" },
-    { message = "^[Ff]ix", group = "Bug Fixes" },
-    { message = "^[Rr]efactor", group = "Refactor" },
-
-    { message = "^:sparkles:", group = "New Features" },
-    { message = "^:bug:|^:adhesive_bandage:", group = "Bug Fixes" },
-    { message = "^:recycle:", group = "Refactor" },
-    { message = "^:white_check_mark:|^:test_tube:", group = "Tests" },
-    { message = "^:memo:|^:pencil2:|^:bulb:|^:speech_balloon:", group = "Documentation" },
-    { message = "^:wrench:|^:label:|^:arrow_up:|^:arrow_down:|^:heavy_plus_sign:|^:heavy_minus_sign:|^:building_construction:", group = "Chores" },
-    { message = "^:page_facing_up:|^:see_no_evil:", group = "Chores" },
-    { message = "^:zap:", group = "Performance" },
+    { message = "^:sparkles:|^[Ff]eat|^:rocket:|^:tada:", group = "Added" },
+    { message = "^:bug:|^:adhesive_bandage:|^[Ff]ix|^:rotating_light:|^:green_heart:", group = "Fixed" },
+    { message = "^:zap:|^:lipstick:|^:label:|^:page_facing_up:|^:see_no_evil:", group = "Changed" },
+    { message = "^:fire:|^:coffin:", group = "Removed" },
+    { message = "^:wastebasket:", group = "Deprecated" },
     { message = "^:lock:", group = "Security" },
-    { message = "^:lipstick:", group = "UI" },
-    { message = "^:rotating_light:", group = "Chores" },
-    { message = "^:green_heart:", group = "CI" },
-    { message = "^:fire:|^:wastebasket:", group = "Removals" },
-    { message = "^:rocket:", skip = true },
-    { message = "^:tada:", skip = true },
+    { message = "^:memo:|^:pencil2:|^:bulb:|^:speech_balloon:", group = "Documentation" },
+    { message = "^:recycle:|^[Rr]efactor|^:wrench:|^:arrow_up:|^:arrow_down:|^:heavy_plus_sign:|^:heavy_minus_sign:|^:building_construction:|^:white_check_mark:|^:test_tube:|^[Cc]hore", group = "Chores" },
 ]
