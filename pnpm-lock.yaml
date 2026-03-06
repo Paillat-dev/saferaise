@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      remark-toc:
-        specifier: ^9.0.0
-        version: 9.0.0
     devDependencies:
       remark:
         specifier: ^15.0.1
@@ -30,6 +26,9 @@ importers:
       remark-preset-lint-recommended:
         specifier: ^7.0.1
         version: 7.0.1
+      remark-toc:
+        specifier: ^9.0.0
+        version: 9.0.0
 
 packages:
 

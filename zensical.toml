@@ -1,7 +1,7 @@
 [project]
 site_name = "saferaise"
 site_description = "Checked exceptions for Python"
-site_url = "https://paillat-dev.github.io/saferaise/"
+site_url = "https://paillat.dev/saferaise/"
 repo_url = "https://github.com/Paillat-dev/saferaise"
 repo_name = "Paillat-dev/saferaise"
 copyright = "Copyright &copy; 2026 <a href=\"https://paillat.dev\">Paillat-dev</a> &mdash; <a href=\"https://github.com/Paillat-dev/saferaise/blob/master/LICENSE\">MIT License</a>"

@@ -53,11 +53,11 @@ def main():
 
 ## Documentation
 
-Full documentation is available at **[https://paillat-dev.github.io/saferaise](https://paillat-dev.github.io/saferaise)**
+Full documentation is available at **[https://paillat.dev/saferaise](https://paillat.dev/saferaise)**
 
-* [How It Works](https://paillat-dev.github.io/saferaise/how-it-works/)
-* [Advanced Usage](https://paillat-dev.github.io/saferaise/advanced/)
-* [API Reference](https://paillat-dev.github.io/saferaise/api/)
+* [How It Works](https://paillat.dev/saferaise/how-it-works/)
+* [Advanced Usage](https://paillat.dev/saferaise/advanced/)
+* [API Reference](https://paillat.dev/saferaise/api/)
 
 ## License
 
