@@ -50,6 +50,35 @@ except AppError:
     ...
 ```
 
+## Checking Instrumentation with `is_registered`
+
+Inside an instrumented module, you can call `is_registered()` to check at runtime whether the current module has been processed by the import hook:
+
+```python
+# myapp/services/auth.py
+from saferaise import is_registered
+
+if is_registered():
+    print("saferaise is active for this module")
+```
+
+This is useful for conditional debug output or assertions:
+
+```python
+from saferaise import is_registered, raises
+
+assert is_registered(), "This module must be loaded via saferaise.register()"
+
+@raises(PermissionError)
+def check_access(user_id: int) -> None:
+    ...
+```
+
+`is_registered()` inspects the caller's globals for the injected watcher key, so it works correctly across relative imports and subpackages — any module loaded through the hook will return `True`.
+
+!!! note
+    `is_registered()` reflects whether the **calling module** was instrumented, not whether a watching context is currently active. Use `enable()` to activate enforcement; `is_registered()` only tells you the hook was applied at import time.
+
 ## Performance
 
 AST rewriting happens **at import time only**, and only for packages explicitly passed to `register`. There is no per-call overhead from instrumentation.

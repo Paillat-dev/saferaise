@@ -331,3 +331,80 @@ class TestMultipleRoots:
         assert ValueError in mod_a.result
         assert mod_b.result is not None
         assert TypeError in mod_b.result
+
+
+@pytest.mark.usefixtures("_cleanup_meta_path")
+class TestIsRegistered:
+    """is_registered() reports whether the calling module has been instrumented."""
+
+    def test_true_in_registered_package(self, make_package: PackageFactory) -> None:
+        # myapp/__init__.py registers the package, services/auth.py checks is_registered
+        pkg = make_package("is_reg_e2e1")
+        pkg.add_module(
+            "__init__.py",
+            "import saferaise\nsaferaise.register('is_reg_e2e1')\n",
+        )
+        pkg.add_module("services/__init__.py", "")
+        pkg.add_module(
+            "services/auth.py",
+            "from saferaise import is_registered\nresult = is_registered()\n",
+        )
+        pkg.install()
+        mod = pkg.import_module("services.auth")
+        assert mod.result is True
+
+    def test_false_in_unregistered_package(self, make_package: PackageFactory) -> None:
+        pkg = make_package("is_reg_e2e2")
+        pkg.add_module("services/__init__.py", "")
+        pkg.add_module(
+            "services/auth.py",
+            "from saferaise import is_registered\nresult = is_registered()\n",
+        )
+        pkg.install()
+        # no register() call
+        mod = pkg.import_module("services.auth")
+        assert mod.result is False
+
+    def test_true_after_relative_import_chain(self, make_package: PackageFactory) -> None:
+        # __init__.py registers, db/models.py uses relative import from db/base.py
+        # is_registered() in db/models.py should still return True
+        pkg = make_package("is_reg_e2e3")
+        pkg.add_module(
+            "__init__.py",
+            "import saferaise\nsaferaise.register('is_reg_e2e3')\n",
+        )
+        pkg.add_module("db/__init__.py", "")
+        pkg.add_module("db/base.py", "TABLE = 'users'\n")
+        pkg.add_module(
+            "db/models.py",
+            "from .base import TABLE\nfrom saferaise import is_registered\nresult = is_registered()\n",
+        )
+        pkg.install()
+        mod = pkg.import_module("db.models")
+        assert mod.TABLE == "users"
+        assert mod.result is True
+
+    def test_is_registered_used_as_guard(self, make_package: PackageFactory) -> None:
+        # A module uses is_registered() to conditionally add debug info
+        pkg = make_package("is_reg_e2e4")
+        pkg.add_module(
+            "__init__.py",
+            "import saferaise\nsaferaise.register('is_reg_e2e4')\n",
+        )
+        pkg.add_module(
+            "utils.py",
+            "from saferaise import is_registered, raises\n"
+            + "\n"
+            + "instrumented = is_registered()\n"
+            + "\n"
+            + "@raises(ValueError)\n"
+            + "def parse(raw):\n"
+            + "    return int(raw)\n",
+        )
+        pkg.install()
+        with enable():
+            mod = pkg.import_module("utils")
+        assert mod.instrumented is True
+        with enable():
+            with unsafe(ValueError):
+                assert mod.parse("42") == 42

@@ -8,6 +8,7 @@
       members:
         - raises
         - register
+        - is_registered
         - enable
         - disable
         - unsafe

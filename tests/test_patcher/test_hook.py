@@ -83,3 +83,62 @@ class TestRegisterEndToEnd:
             mod = pkg.import_module("mod")
         assert mod.result is not None
         assert ValueError in mod.result
+
+
+@pytest.mark.usefixtures("_cleanup_meta_path")
+class TestIsRegistered:
+    def test_returns_true_in_instrumented_module(self, make_package: PackageFactory) -> None:
+        pkg = make_package("is_reg_pkg")
+        pkg.add_module(
+            "mod.py",
+            "from saferaise import is_registered\nresult = is_registered()\n",
+        )
+        pkg.install()
+        register("is_reg_pkg")
+        mod = pkg.import_module("mod")
+        assert mod.result is True
+
+    def test_returns_false_in_non_instrumented_module(self, make_package: PackageFactory) -> None:
+        pkg = make_package("is_reg_pkg2")
+        pkg.add_module(
+            "mod.py",
+            "from saferaise import is_registered\nresult = is_registered()\n",
+        )
+        pkg.install()
+        # register() is NOT called - module is not instrumented
+        mod = pkg.import_module("mod")
+        assert mod.result is False
+
+    def test_returns_true_in_subpackage_module(self, make_package: PackageFactory) -> None:
+        pkg = make_package("is_reg_pkg3")
+        pkg.add_module("services/__init__.py", "")
+        pkg.add_module(
+            "services/auth.py",
+            "from saferaise import is_registered\nresult = is_registered()\n",
+        )
+        pkg.install()
+        register("is_reg_pkg3")
+        mod = pkg.import_module("services.auth")
+        assert mod.result is True
+
+    def test_returns_false_for_unregistered_root_even_if_sibling_registered(self, make_package: PackageFactory) -> None:
+        pkg_a = make_package("is_reg_pkg4a")
+        pkg_a.add_module(
+            "mod.py",
+            "from saferaise import is_registered\nresult = is_registered()\n",
+        )
+        pkg_a.install()
+
+        pkg_b = make_package("is_reg_pkg4b")
+        pkg_b.add_module(
+            "mod.py",
+            "from saferaise import is_registered\nresult = is_registered()\n",
+        )
+        pkg_b.install()
+
+        register("is_reg_pkg4a")  # only register pkg_a
+
+        mod_a = pkg_a.import_module("mod")
+        mod_b = pkg_b.import_module("mod")
+        assert mod_a.result is True
+        assert mod_b.result is False
