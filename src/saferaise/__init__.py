@@ -2,6 +2,6 @@
 
 from ._decorator import raises
 from ._patcher import is_registered, register
-from ._watched_exceptions import disable, enable, unsafe
+from ._watched_exceptions import disable, enable, is_enabled, unsafe
 
-__all__ = ("disable", "enable", "is_registered", "raises", "register", "unsafe")
+__all__ = ("disable", "enable", "is_enabled", "is_registered", "raises", "register", "unsafe")

@@ -77,7 +77,40 @@ def check_access(user_id: int) -> None:
 `is_registered()` inspects the caller's globals for the injected watcher key, so it works correctly across relative imports and subpackages — any module loaded through the hook will return `True`.
 
 !!! note
-    `is_registered()` reflects whether the **calling module** was instrumented, not whether a watching context is currently active. Use `enable()` to activate enforcement; `is_registered()` only tells you the hook was applied at import time.
+    `is_registered()` reflects whether the **calling module** was instrumented at import time, not whether enforcement is currently active. Use `is_enabled()` to check whether you are inside an active `enable()` context.
+
+## Checking Active Watching with `is_enabled`
+
+`is_enabled()` returns `True` if exception watching is currently active — i.e., you are inside an `enable()` context and not inside a `disable()` context:
+
+```python
+from saferaise import enable, disable, is_enabled
+
+print(is_enabled())  # False
+
+with enable():
+    print(is_enabled())  # True
+    with disable():
+        print(is_enabled())  # False
+    print(is_enabled())  # True
+
+print(is_enabled())  # False
+```
+
+This is useful for conditional logic that should only run when saferaise is enforcing:
+
+```python
+from saferaise import is_enabled, raises
+
+@raises(ValueError)
+def parse(raw: str) -> int:
+    if is_enabled():
+        print("saferaise is active - enforcement is on")
+    return int(raw)
+```
+
+!!! note
+    `is_enabled()` is about the active **watching context**, not about instrumentation. Use `is_registered()` to check whether the current module was processed by the import hook, and `is_enabled()` to check whether `@raises` enforcement is currently active.
 
 ## Performance
 

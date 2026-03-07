@@ -10,6 +10,7 @@
         - register
         - is_registered
         - enable
+        - is_enabled
         - disable
         - unsafe
 

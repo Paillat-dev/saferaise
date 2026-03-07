@@ -2,7 +2,7 @@
 
 import pytest
 
-from saferaise import disable, enable, unsafe
+from saferaise import disable, enable, is_enabled, unsafe
 from saferaise._errors import NotEnteredError
 from saferaise._watched_exceptions import get_exceptions, watch_exceptions
 
@@ -94,6 +94,35 @@ class TestDisable:
                 with disable():
                     pass
                 assert ValueError in (get_exceptions() or frozenset())
+
+
+class TestIsEnabled:
+    def test_false_outside_enable(self):
+        assert is_enabled() is False
+
+    def test_true_inside_enable(self):
+        with enable():
+            assert is_enabled() is True
+
+    def test_false_after_enable_exits(self):
+        with enable():
+            pass
+        assert is_enabled() is False
+
+    def test_false_inside_disable(self):
+        with enable():
+            with disable():
+                assert is_enabled() is False
+
+    def test_true_inside_unsafe(self):
+        with enable():
+            with unsafe(ValueError):
+                assert is_enabled() is True
+
+    def test_true_with_watch_exceptions(self):
+        with enable():
+            with watch_exceptions(ValueError):
+                assert is_enabled() is True
 
 
 class TestUnsafe:

@@ -125,4 +125,13 @@ def unsafe(*exceptions: type[BaseException]) -> Iterator[None]:
         _reset_exceptions(token)
 
 
-__all__ = ("disable", "enable", "get_exceptions", "unsafe", "watch_exceptions")
+def is_enabled() -> bool:
+    """Check if exception watching is currently enabled.
+
+    Returns:
+        True if watching is enabled, False otherwise.
+    """
+    return _watched_exceptions.get() is not None
+
+
+__all__ = ("disable", "enable", "get_exceptions", "is_enabled", "unsafe", "watch_exceptions")
