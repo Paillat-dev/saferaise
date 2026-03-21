@@ -1,6 +1,11 @@
 """Tests for _errors.py."""
 
-from saferaise._errors import NameCollisionError, NotEnteredError, SafeRaiseError, UnwatchedRaiseError
+from saferaise._errors import (
+    NameCollisionError,
+    NotEnteredError,
+    SafeRaiseError,
+    UnwatchedRaiseError,
+)
 
 
 class TestSafeRaiseError:

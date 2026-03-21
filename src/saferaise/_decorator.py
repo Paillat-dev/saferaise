@@ -1,6 +1,24 @@
-import inspect
+"""
+Provide functionality to declare exceptions that a function can raise and validate exceptions
+against a watched set during runtime.
+
+This module offers a decorator `raises` to specify which exceptions a function might raise.
+At runtime, it ensures that these exceptions are part of the current watched set. If they are
+not, an `UnwatchedRaiseError` is raised.
+
+Functions:
+    raises: A decorator to declare allowed exceptions for a function.
+
+Errors:
+    UnwatchedRaiseError: Raised when an exception declared in `raises` is not in the watched set.
+
+Exported Symbols:
+    raises
+"""
+
 from collections.abc import Callable
 from functools import wraps
+import inspect
 
 from ._errors import UnwatchedRaiseError
 from ._watched_exceptions import get_exceptions, watch_exceptions

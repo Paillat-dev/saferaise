@@ -1,3 +1,12 @@
+"""
+A module that provides utilities to check and manage saferaise exception
+watching registration.
+
+This module contains functionality to determine whether saferaise has been
+registered for the current file. It also exposes a constant key used for
+registration tracking.
+"""
+
 import inspect
 
 WATCHER_KEY: str = "_saferaise_watch_exceptions"

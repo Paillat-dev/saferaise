@@ -10,33 +10,26 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: "Set up Python"
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+      - name: "Setup PDM"
+        uses: pdm-project/setup-pdm@v4
         with:
+          cache: true
           python-version-file: "pyproject.toml"
 
-      - name: "Install uv"
-        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7
-        with:
-          enable-cache: true
-
       - name: "Install dependencies"
-        run: uv sync --group dev --group test
-        env:
-          UV_PYTHON_DOWNLOADS: "false"
-          UV_FROZEN: "true"
+        run: pdm install --frozen-lockfile --group dev
 
       - name: "Format Check"
         id: format
-        run: "uv run ruff format --check --preview --output-format github"
+        run: "pdm run format:check"
 
       - name: "Lint Check"
         id: lint
-        run: "uv run ruff check --output-format github"
+        run: "pdm run lint"
 
       - name: "Type Check"
         id: typecheck
-        run: "uv run basedpyright src"
+        run: "pdm run typecheck"
 
   quality-pnpm:
     name: "Quality Checks (pnpm)"
@@ -66,24 +59,17 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: "Setup Python"
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+      - name: "Setup PDM"
+        uses: pdm-project/setup-pdm@v4
         with:
-          python-version-file: "pyproject.toml"
-
-      - name: "Install uv"
-        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7
-        with:
-          enable-cache: true
+          cache: true
+          python-version: ${{ matrix.python-version }}
 
       - name: "Install dependencies"
-        run: uv sync --group dev
-        env:
-          UV_PYTHON_DOWNLOADS: "false"
-          UV_FROZEN: "true"
+        run: pdm install --frozen-lockfile --group dev
 
       - name: "Run tests"
-        run: uv run tox
+        run: pdm run tox
 
   tests-pass: # ref: https://github.com/orgs/community/discussions/4324#discussioncomment-3477871
     runs-on: ubuntu-latest

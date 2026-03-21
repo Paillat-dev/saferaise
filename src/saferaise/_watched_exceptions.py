@@ -1,3 +1,7 @@
+"""
+A module providing tools to manage and validate exception raising contexts.
+"""
+
 from collections.abc import Iterator
 from contextlib import contextmanager
 from contextvars import ContextVar, Token
@@ -12,21 +16,33 @@ _watched_exceptions: ContextVar[frozenset[type[BaseException]] | None] = Context
 
 def _add_exceptions(*exceptions: type[BaseException]) -> Token[frozenset[type[BaseException]] | None]:
     if (current := _watched_exceptions.get()) is not None:
-        token = _watched_exceptions.set(current | frozenset(exceptions))
-    else:
-        token = _watched_exceptions.set(None)
-    return token
+        return _watched_exceptions.set(current | frozenset(exceptions))
+    return _watched_exceptions.set(None)
 
 
 def get_exceptions() -> frozenset[type[BaseException]] | None:
+    """
+    Get the currently watched exceptions.
+
+    Returns:
+        frozenset[type[BaseException]] | None: The currently watched exceptions or None.
+    """
     return _watched_exceptions.get()
 
 
 def _reset_exceptions(token: Token[frozenset[type[BaseException]] | None]) -> None:
+    """
+    Reset the watched exceptions to the provided token.
+
+    Args:
+        token: Token containing the new set of watched exceptions.
+    """
     _watched_exceptions.reset(token)
 
 
-class watch_exceptions:  # noqa: N801
+class watch_exceptions:  # noqa: N801 # pylint: disable=invalid-name
+    """Context manager to watch for specific exceptions."""
+
     def __init__(self, *exceptions: type[BaseException]) -> None:
         self._exceptions: tuple[type[BaseException], ...] = exceptions
         self._token: Token[frozenset[type[BaseException]] | None] | None = None

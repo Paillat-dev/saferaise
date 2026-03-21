@@ -2,7 +2,11 @@
 
 import pytest
 
-from saferaise import enable, register, unsafe
+from saferaise import (
+    enable,
+    register,
+    unsafe,
+)
 from saferaise._errors import UnwatchedRaiseError
 from saferaise._patcher._common import WATCHER_KEY
 

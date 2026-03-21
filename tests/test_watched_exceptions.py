@@ -2,7 +2,12 @@
 
 import pytest
 
-from saferaise import disable, enable, is_enabled, unsafe
+from saferaise import (
+    disable,
+    enable,
+    is_enabled,
+    unsafe,
+)
 from saferaise._errors import NotEnteredError
 from saferaise._watched_exceptions import get_exceptions, watch_exceptions
 

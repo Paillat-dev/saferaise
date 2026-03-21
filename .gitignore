@@ -14,3 +14,4 @@ __pycache__/
 _version.py
 
 site/
+.pdm-python

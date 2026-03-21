@@ -1,3 +1,19 @@
+"""
+Implements functionality to transform Python source code by injecting exception
+watching logic into try blocks for enhanced exception handling.
+
+This module provides a `transform_source` function to enable the transformation
+of Python source code. It modifies `try` and `try ... try_star` blocks to wrap
+their bodies with exception-watching logic.
+
+Classes:
+- `_TryInjector`: A `NodeTransformer` subclass for handling AST `Try` and
+  `TryStar` nodes.
+
+Functions:
+- `transform_source`: Transforms source code by applying `_TryInjector` logic.
+"""
+
 import ast
 import types
 from typing import override
@@ -35,7 +51,7 @@ class _TryInjector(ast.NodeTransformer):
                         keywords=[],
                     ),
                     optional_vars=None,
-                )
+                ),
             ],
             body=node.body,
         )
@@ -46,14 +62,36 @@ class _TryInjector(ast.NodeTransformer):
         return [node]
 
     @override
-    def visit_Try(self, node: ast.Try) -> list[ast.stmt]:
+    def visit_Try(self, node: ast.Try) -> list[ast.stmt]:  # pylint: disable=invalid-name
+        """
+        Visit a Try node.
+
+        This method is called when a Try node is encountered in the AST.
+
+        Args:
+            node: The Try node to be visited.
+
+        Returns:
+            list[ast.stmt]: The transformed list of statements.
+        """
         self._depth += 1
         self.generic_visit(node)
         self._depth -= 1
         return self._make_transform(node, node.handlers)
 
     @override
-    def visit_TryStar(self, node: ast.TryStar) -> list[ast.stmt]:
+    def visit_TryStar(self, node: ast.TryStar) -> list[ast.stmt]:  # pylint: disable=invalid-name
+        """
+        Visit a TryStar node.
+
+        This method is called when a TryStar node is encountered in the AST.
+
+        Args:
+            node: The TryStar node to be visited.
+
+        Returns:
+            list[ast.stmt]: The transformed list of statements.
+        """
         self._depth += 1
         self.generic_visit(node)
         self._depth -= 1
@@ -61,6 +99,16 @@ class _TryInjector(ast.NodeTransformer):
 
 
 def transform_source(source: str, filename: str) -> types.CodeType:
+    """
+    Transforms source code to inject exception watching logic into try blocks.
+
+    Args:
+        source: The Python source code to be transformed.
+        filename: The name of the file containing the source code.
+
+    Returns:
+        types.CodeType: The transformed code object.
+    """
     tree = ast.parse(source, filename=filename)
     tree = _TryInjector().visit(tree)
     ast.fix_missing_locations(tree)

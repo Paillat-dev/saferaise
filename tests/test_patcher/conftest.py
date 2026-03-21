@@ -1,10 +1,10 @@
 """Shared fixtures for patcher tests."""
 
+from collections.abc import Callable, Iterator
 import importlib
+from pathlib import Path
 import sys
 import types
-from collections.abc import Callable, Iterator
-from pathlib import Path
 
 import pytest
 

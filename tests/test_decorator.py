@@ -7,7 +7,11 @@ from saferaise._decorator import raises
 from saferaise._errors import UnwatchedRaiseError
 from saferaise._watched_exceptions import get_exceptions
 
-from .conftest import AnotherError, ChildError, CustomError
+from .conftest import (
+    AnotherError,
+    ChildError,
+    CustomError,
+)
 
 
 class TestNoWatchingActive:

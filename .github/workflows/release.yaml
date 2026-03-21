@@ -17,26 +17,19 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: "Set up Python"
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+      - name: "Setup PDM"
+        uses: pdm-project/setup-pdm@v4
         with:
+          cache: true
           python-version-file: "pyproject.toml"
 
-      - name: "Install uv"
-        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7
-        with:
-          enable-cache: true
-
       - name: "Install dependencies"
-        run: uv sync
-        env:
-          UV_PYTHON_DOWNLOADS: "false"
-          UV_FROZEN: "true"
+        run: pdm install --frozen-lockfile
 
       - name: "Get version"
         id: version
         run: |
-          VERSION=$(uv run python -c "from saferaise._version import __version__; print(__version__)")
+          VERSION=$(pdm run python -c "from saferaise._version import __version__; print(__version__)")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
   publish:
@@ -55,27 +48,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "Set up Python"
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+      - name: "Setup PDM"
+        uses: pdm-project/setup-pdm@v4
         with:
+          cache: true
           python-version-file: "pyproject.toml"
 
-      - name: "Install uv"
-        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7
-        with:
-          enable-cache: true
-
       - name: "Install dependencies"
-        run: uv sync
-        env:
-          UV_PYTHON_DOWNLOADS: "false"
-          UV_FROZEN: "true"
+        run: pdm install --frozen-lockfile
 
-      - name: "Build"
-        run: uv build
-
-      - name: "Publish"
-        run: uv publish
+      - name: "Build and Publish"
+        run: pdm publish
 
       - name: "Generate Changelog"
         uses: orhun/git-cliff-action@c93ef52f3d0ddcdcc9bd5447d98d458a11cd4f72 # v4
@@ -117,19 +100,16 @@ jobs:
         with:
           python-version-file: "pyproject.toml"
 
-      - name: "Install uv"
-        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7
+      - name: "Setup PDM"
+        uses: pdm-project/setup-pdm@v4
         with:
-          enable-cache: true
+          cache: true
 
       - name: "Install dependencies"
-        run: uv sync --group docs
-        env:
-          UV_PYTHON_DOWNLOADS: "false"
-          UV_FROZEN: "true"
+        run: pdm install --frozen-lockfile
 
       - name: "Build docs"
-        run: uv run zensical build --clean
+        run: pdm run docs:build
 
       - name: "Upload docs"
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
