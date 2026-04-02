@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: "Setup PDM"
-        uses: pdm-project/setup-pdm@v4
+        uses: pdm-project/setup-pdm@94a823180e06fcde4ad29308721954a521c96ed0 # v4
         with:
           cache: true
           python-version-file: "pyproject.toml"
@@ -49,7 +49,7 @@ jobs:
           fetch-depth: 0
 
       - name: "Setup PDM"
-        uses: pdm-project/setup-pdm@v4
+        uses: pdm-project/setup-pdm@94a823180e06fcde4ad29308721954a521c96ed0 # v4
         with:
           cache: true
           python-version-file: "pyproject.toml"
@@ -101,7 +101,7 @@ jobs:
           python-version-file: "pyproject.toml"
 
       - name: "Setup PDM"
-        uses: pdm-project/setup-pdm@v4
+        uses: pdm-project/setup-pdm@94a823180e06fcde4ad29308721954a521c96ed0 # v4
         with:
           cache: true
 
